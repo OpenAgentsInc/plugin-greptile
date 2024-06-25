@@ -22,8 +22,8 @@ This plugin provides a WebAssembly-based integration with the Greptile API, allo
 1. Clone this repository:
 
    ```
-   git clone https://github.com/your-username/greptile-integration-plugin.git
-   cd greptile-integration-plugin
+   git clone https://github.com/OpenAgentsInc/plugin-greptile.git
+   cd plugin-greptile
    ```
 
 2. Install dependencies:
