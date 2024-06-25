@@ -17,6 +17,7 @@ type input struct {
 	Branch      string `json:"branch"`
 	ApiKey      string `json:"api_key"`
 	GithubToken string `json:"github_token"`
+	Query       string `json:"query"`
 	Messages    []struct {
 		ID      string `json:"id"`
 		Content string `json:"content"`
@@ -95,9 +96,25 @@ func queryRepository(in input) int32 {
 }
 
 func searchRepository(in input) int32 {
-	// Placeholder for future implementation
-	pdk.SetError(fmt.Errorf("search operation not yet implemented"))
-	return 1
+	url := "https://api.greptile.com/v2/search"
+
+	if in.Query == "" {
+		pdk.SetError(fmt.Errorf("must specify a search query"))
+		return 1
+	}
+
+	payload := map[string]interface{}{
+		"query": in.Query,
+		"repositories": []map[string]string{{
+			"remote":     in.Remote,
+			"branch":     in.Branch,
+			"repository": in.Repository,
+		}},
+		"sessionId": in.SessionID,
+		"stream":    in.Stream,
+	}
+
+	return sendRequest(url, in.ApiKey, in.GithubToken, payload)
 }
 
 func sendRequest(url, apiKey, githubToken string, payload interface{}) int32 {

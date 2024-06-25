@@ -19,6 +19,13 @@ test-query:
 		echo "Error: GREPTILE_API_KEY and GITHUB_TOKEN must be set in .env file"; \
 		exit 1; \
 	fi
-	extism call plugin.wasm run --input '{"operation": "query", "repository": "openagentsinc/kb-wanix", "remote": "github", "branch": "main", "api_key": "$(GREPTILE_API_KEY)", "github_token": "$(GITHUB_TOKEN)", "messages": [{"id": "1", "content": "What is this repository about?", "role": "user"}], "session_id": "test-session", "stream": false, "genius": false}' --wasi --allow-host="*.greptile.com"
+	extism call plugin.wasm run --input '{"operation": "query", "repository": "openagentsinc/kb-wanix", "remote": "github", "branch": "main", "api_key": "$(GREPTILE_API_KEY)", "github_token": "$(GITHUB_TOKEN)", "messages": [{"id": "1", "content": "What is WANIX?", "role": "user"}], "session_id": "test-session", "stream": false, "genius": true}' --wasi --allow-host="*.greptile.com"
 
-.PHONY: build test-index test-query
+test-search:
+	@if [ -z "$(GREPTILE_API_KEY)" ] || [ -z "$(GITHUB_TOKEN)" ]; then \
+		echo "Error: GREPTILE_API_KEY and GITHUB_TOKEN must be set in .env file"; \
+		exit 1; \
+	fi
+	extism call plugin.wasm run --input '{"operation": "search", "repository": "openagentsinc/kb-wanix", "remote": "github", "branch": "main", "api_key": "$(GREPTILE_API_KEY)", "github_token": "$(GITHUB_TOKEN)", "query": "What is WANIX?", "session_id": "test-session", "stream": false}' --wasi --allow-host="*.greptile.com"
+
+.PHONY: build test-index test-query test-search
